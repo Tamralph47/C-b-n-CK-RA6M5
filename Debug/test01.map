@@ -1,0 +1,1290 @@
+     VMA      LMA     Size Align Out     In      Symbol
+       0        0        0     1 RAM_START = 0x20000000
+       0        0        0     1 RAM_LENGTH = 0x80000
+       0        0        0     1 FLASH_START = 0x00000000
+       0        0        0     1 FLASH_LENGTH = 0x200000
+       0        0        0     1 DATA_FLASH_START = 0x08000000
+       0        0        0     1 DATA_FLASH_LENGTH = 0x2000
+       0        0        0     1 OPTION_SETTING_START = 0x0100A100
+       0        0        0     1 OPTION_SETTING_LENGTH = 0x100
+       0        0        0     1 OPTION_SETTING_S_START = 0x0100A200
+       0        0        0     1 OPTION_SETTING_S_LENGTH = 0x100
+       0        0        0     1 ID_CODE_START = 0x00000000
+       0        0        0     1 ID_CODE_LENGTH = 0x0
+       0        0        0     1 SDRAM_START = 0x80010000
+       0        0        0     1 SDRAM_LENGTH = 0x0
+       0        0        0     1 QSPI_FLASH_START = 0x60000000
+       0        0        0     1 QSPI_FLASH_LENGTH = 0x4000000
+       0        0        0     1 OSPI_DEVICE_0_START = 0x68000000
+       0        0        0     1 OSPI_DEVICE_0_LENGTH = 0x8000000
+       0        0        0     1 OSPI_DEVICE_1_START = 0x70000000
+       0        0        0     1 OSPI_DEVICE_1_LENGTH = 0x10000000
+       0        0        0     1 QSPI_FLASH_PRV_LENGTH = DEFINED ( QSPI_FLASH_SIZE ) ? ABSOLUTE ( QSPI_FLASH_SIZE ) : ABSOLUTE ( QSPI_FLASH_LENGTH )
+       0        0        0     1 OSPI_DEVICE_0_PRV_LENGTH = DEFINED ( OSPI_DEVICE_0_SIZE ) ? ABSOLUTE ( OSPI_DEVICE_0_SIZE ) : ABSOLUTE ( OSPI_DEVICE_0_LENGTH )
+       0        0        0     1 OSPI_DEVICE_1_PRV_LENGTH = DEFINED ( OSPI_DEVICE_1_SIZE ) ? ABSOLUTE ( OSPI_DEVICE_1_SIZE ) : ABSOLUTE ( OSPI_DEVICE_1_LENGTH )
+       0        0        0     1 __RESERVE_NS_RAM = ! DEFINED ( PROJECT_NONSECURE ) && DEFINED ( RAM_NS_BUFFER_LENGTH ) && ( OPTION_SETTING_S_LENGTH != 0 )
+       0        0        0     1 __ITCM_START = DEFINED ( ITCM_START ) ? ITCM_START : 0
+       0        0        0     1 __ITCM_LENGTH = DEFINED ( ITCM_LENGTH ) ? ITCM_LENGTH : 0
+       0        0        0     1 __DTCM_START = DEFINED ( DTCM_START ) ? DTCM_START : 0
+       0        0        0     1 __DTCM_LENGTH = DEFINED ( DTCM_LENGTH ) ? DTCM_LENGTH : 0
+       0        0        0     1 RAM_NS_BUFFER_BLOCK_LENGTH = DEFINED ( RAM_NS_BUFFER_LENGTH ) ? ALIGN ( RAM_NS_BUFFER_LENGTH , 8192 ) : 0
+       0        0        0     1 __RAM_NS_BUFFER_LENGTH = DEFINED ( RAM_NS_BUFFER_LENGTH ) ? RAM_NS_BUFFER_LENGTH : 0
+       0        0        0     1 RAM_NS_BUFFER_START = RAM_START + RAM_LENGTH - __RAM_NS_BUFFER_LENGTH
+       0        0        0     1 RAM_NS_BUFFER_BLOCK_START = RAM_START + RAM_LENGTH - RAM_NS_BUFFER_BLOCK_LENGTH
+       0        0        0     1 OPTION_SETTING_START_NS = DEFINED ( PROJECT_NONSECURE ) ? OPTION_SETTING_START : OPTION_SETTING_START + 0x80
+       0        0        0     1 __bl_FSP_BOOTABLE_IMAGE = 1
+       0        0        0     1 __bln_FSP_BOOTABLE_IMAGE = 1
+       0        0        0     1 PROJECT_SECURE_OR_FLAT = ( ! DEFINED ( PROJECT_NONSECURE ) || DEFINED ( PROJECT_SECURE ) ) && OPTION_SETTING_LENGTH && ! DEFINED ( FSP_BOOTABLE_IMAGE )
+       0        0        0     1 USE_OPTION_SETTING_NS = DEFINED ( PROJECT_NONSECURE ) && ! DEFINED ( FSP_BOOTABLE_IMAGE )
+       0        0        0     1 __bl_FLASH_IMAGE_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_IMAGE_NUMBER == 1 ? FLASH_START + FLASH_BOOTLOADER_LENGTH + FLASH_BOOTLOADER_HEADER_LENGTH : FLASH_START + FLASH_BOOTLOADER_LENGTH + FLASH_BOOTLOADER_SCRATCH_LENGTH + FLASH_APPLICATION_S_LENGTH + FLASH_BOOTLOADER_HEADER_LENGTH
+       0        0        0     1 __bl_FLASH_IMAGE_LENGTH = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_S_LENGTH - FLASH_BOOTLOADER_HEADER_LENGTH
+       0        0        0     1 __bl_FLASH_IMAGE_END = __bl_FLASH_IMAGE_START + __bl_FLASH_IMAGE_LENGTH
+       0        0        0     1 __bl_XIP_SECONDARY_FLASH_IMAGE_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_BOOTLOADER_LENGTH + FLASH_APPLICATION_S_LENGTH + FLASH_BOOTLOADER_HEADER_LENGTH
+       0        0        0     1 __bl_XIP_SECONDARY_FLASH_IMAGE_END = __bl_XIP_SECONDARY_FLASH_IMAGE_START + __bl_FLASH_IMAGE_LENGTH
+       0        0        0     1 __bl_FLASH_NS_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_NS_LENGTH == 0 ? __bl_FLASH_IMAGE_END : __bl_FLASH_IMAGE_START - FLASH_BOOTLOADER_HEADER_LENGTH + FLASH_APPLICATION_S_LENGTH
+       0        0        0     1 __bl_FLASH_NSC_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_NS_LENGTH == 0 ? __bl_FLASH_IMAGE_END : __bl_FLASH_IMAGE_END - FLASH_APPLICATION_NSC_LENGTH
+       0        0        0     1 __bl_RAM_NS_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_NS_LENGTH == 0 ? RAM_START + RAM_LENGTH : RAM_START + RAM_LENGTH - RAM_APPLICATION_NS_LENGTH
+       0        0        0     1 __bl_RAM_NSC_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_NS_LENGTH == 0 ? RAM_START + RAM_LENGTH : __bl_RAM_NS_START - RAM_APPLICATION_NSC_LENGTH
+       0        0        0     1 __bl_FLASH_NS_IMAGE_START = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_NS_LENGTH == 0 ? __bl_FLASH_IMAGE_END : __bl_FLASH_NS_START + FLASH_BOOTLOADER_HEADER_LENGTH_2
+       0        0        0     1 __bln_FLASH_IMAGE_START = __bl_FLASH_NS_IMAGE_START | ( ! DEFINED ( NS_OFFSET_START ) ? 0 : NS_OFFSET_START )
+       0        0        0     1 __bln_FLASH_IMAGE_LENGTH = ! DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? 0 : FLASH_APPLICATION_NS_LENGTH == 0 ? __bl_FLASH_IMAGE_END : FLASH_APPLICATION_NS_LENGTH - FLASH_BOOTLOADER_HEADER_LENGTH_2
+       0        0        0     1 __XIP_SECONDARY_SLOT_IMAGE = DEFINED ( XIP_SECONDARY_SLOT_IMAGE ) ? XIP_SECONDARY_SLOT_IMAGE : 0
+       0        0        0     1 FLASH_ORIGIN = ! DEFINED ( FLASH_IMAGE_START ) ? FLASH_START : __XIP_SECONDARY_SLOT_IMAGE == 1 ? XIP_SECONDARY_FLASH_IMAGE_START : FLASH_IMAGE_START
+       0        0        0     1 LIMITED_FLASH_LENGTH = DEFINED ( FLASH_IMAGE_LENGTH ) ? FLASH_IMAGE_LENGTH : DEFINED ( FLASH_BOOTLOADER_LENGTH ) ? FLASH_BOOTLOADER_LENGTH : FLASH_LENGTH
+       0        0        0     1 OPTION_SETTING_SAS_SIZE = 0x34
+       0        0        0     1 OPTION_SETTING_SAS_LENGTH = ! DEFINED ( OPTION_SETTING_LENGTH ) ? 0 : OPTION_SETTING_LENGTH == 0 ? 0 : OPTION_SETTING_LENGTH - OPTION_SETTING_SAS_SIZE
+       0        0     4070     8 .text
+       0        0        0     1         __tz_FLASH_S = ABSOLUTE ( FLASH_START )
+       0        0        0     1         __ROM_Start = .
+       0        0       40     4         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.fixed_vectors)
+       0        0       40     1                 __Vectors
+      40       40      180     4         ./ra_gen/vector_data.o:(.application_vectors)
+      40       40      180     1                 g_vector_table
+     1c0      1c0        0     1         __Vectors_End = .
+     1c0      1c0        0     1         . = OPTION_SETTING_LENGTH > 0 ? . : __ROM_Start + 0x400
+     1c0      1c0        0     1         . = OPTION_SETTING_LENGTH > 0 ? . : __ROM_Start + 0x500
+     1c0      1c0       40     1         . = ALIGN ( 128 )
+     200      200      296     4         ./src/hal_entry.o:(.text.hal_entry)
+     200      200        0     1                 $t.0
+     201      201      296     1                 hal_entry
+     496      496       1a     2         ./src/hal_entry.o:(.text.R_BSP_WarmStart)
+     496      496        0     1                 $t.2
+     497      497       1a     1                 R_BSP_WarmStart
+     4b0      4b0       16     2         ./src/hal_entry.o:(.text.user_uart_callback)
+     4b0      4b0        0     1                 $t.3
+     4b1      4b1       16     1                 user_uart_callback
+     4c6      4c6       16     2         ./src/hal_entry.o:(.text.hs300x_callback)
+     4c6      4c6        0     1                 $t.4
+     4c7      4c7       16     1                 hs300x_callback
+     4dc      4dc        c     2         ./ra_gen/main.o:(.text.main)
+     4dc      4dc        0     1                 $t.0
+     4dd      4dd        c     1                 main
+     4e8      4e8       32     2         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.text.RM_HS300X_Open)
+     4e8      4e8        0     1                 $t.0
+     4e9      4e9       32     1                 RM_HS300X_Open
+     51a      51a       16     2         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.text.RM_HS300X_MeasurementStart)
+     51a      51a        0     1                 $t.1
+     51b      51b       16     1                 RM_HS300X_MeasurementStart
+     530      530        c     2         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.text.RM_HS300X_Read)
+     530      530        0     1                 $t.2
+     531      531        c     1                 RM_HS300X_Read
+     53c      53c       88     2         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.text.RM_HS300X_DataCalculate)
+     53c      53c        0     1                 $t.3
+     53d      53d       88     1                 RM_HS300X_DataCalculate
+     5c4      5c4       32     2         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.text.rm_hs300x_callback)
+     5c4      5c4        0     1                 $t.9
+     5c5      5c5       32     1                 rm_hs300x_callback
+     5f6      5f6       22     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.text.RM_COMMS_I2C_Open)
+     5f6      5f6        0     1                 $t.0
+     5f7      5f7       22     1                 RM_COMMS_I2C_Open
+     618      618        e     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.text.RM_COMMS_I2C_Close)
+     618      618        0     1                 $t.1
+     619      619        e     1                 RM_COMMS_I2C_Close
+     626      626        4     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.text.RM_COMMS_I2C_Read)
+     626      626        0     1                 $t.2
+     627      627        4     1                 RM_COMMS_I2C_Read
+     62a      62a        4     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.text.RM_COMMS_I2C_Write)
+     62a      62a        0     1                 $t.3
+     62b      62b        4     1                 RM_COMMS_I2C_Write
+     62e      62e        4     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.text.RM_COMMS_I2C_WriteRead)
+     62e      62e        0     1                 $t.4
+     62f      62f        4     1                 RM_COMMS_I2C_WriteRead
+     632      632       68     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.text.rm_comms_i2c_bus_read)
+     632      632        0     1                 $t.1
+     633      633       68     1                 rm_comms_i2c_bus_read
+     69a      69a       68     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.text.rm_comms_i2c_bus_write)
+     69a      69a        0     1                 $t.2
+     69b      69b       68     1                 rm_comms_i2c_bus_write
+     702      702       6c     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.text.rm_comms_i2c_bus_write_read)
+     702      702        0     1                 $t.3
+     703      703       6c     1                 rm_comms_i2c_bus_write_read
+     76e      76e       64     2         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.text.rm_comms_i2c_callback)
+     76e      76e        0     1                 $t.4
+     76f      76f       64     1                 rm_comms_i2c_callback
+     7d2      7d2      338     2         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.text.R_SCI_UART_Open)
+     7d2      7d2        0     1                 $t.0
+     7d3      7d3      338     1                 R_SCI_UART_Open
+     b0a      b0a       50     2         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.text.R_SCI_UART_Write)
+     b0a      b0a        0     1                 $t.2
+     b0b      b0b       50     1                 R_SCI_UART_Write
+     b5a      b5a       ca     2         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.text.sci_uart_txi_isr)
+     b5a      b5a        0     1                 $t.10
+     b5b      b5b       ca     1                 sci_uart_txi_isr
+     c24      c24       d6     2         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.text.sci_uart_rxi_isr)
+     c24      c24        0     1                 $t.11
+     c25      c25       d6     1                 sci_uart_rxi_isr
+     cfa      cfa       84     2         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.text.sci_uart_tei_isr)
+     cfa      cfa        0     1                 $t.12
+     cfb      cfb       84     1                 sci_uart_tei_isr
+     d7e      d7e       b0     2         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.text.sci_uart_eri_isr)
+     d7e      d7e        0     1                 $t.13
+     d7f      d7f       b0     1                 sci_uart_eri_isr
+     e2e      e2e       18     2         ./ra/fsp/src/r_ioport/r_ioport.o:(.text.R_IOPORT_Open)
+     e2e      e2e        0     1                 $t.0
+     e2f      e2f       18     1                 R_IOPORT_Open
+     e48      e48       cc     4         ./ra/fsp/src/r_ioport/r_ioport.o:(.text.r_ioport_pins_config)
+     e48      e48        0     1                 $t.13
+     e49      e49       cc     1                 r_ioport_pins_config
+     f14      f14       a6     4         ./ra/fsp/src/r_ioport/r_ioport.o:(.text.bsp_vbatt_init)
+     f14      f14        0     1                 $t.14
+     f15      f15       a6     1                 bsp_vbatt_init
+     fba      fba       82     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_Open)
+     fba      fba        0     1                 $t.0
+     fbb      fbb       82     1                 R_IIC_MASTER_Open
+    103c     103c        c     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_Read)
+    103c     103c        0     1                 $t.1
+    103d     103d        c     1                 R_IIC_MASTER_Read
+    1048     1048        c     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_Write)
+    1048     1048        0     1                 $t.2
+    1049     1049        c     1                 R_IIC_MASTER_Write
+    1054     1054       34     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_Abort)
+    1054     1054        0     1                 $t.3
+    1055     1055       34     1                 R_IIC_MASTER_Abort
+    1088     1088        a     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_SlaveAddressSet)
+    1088     1088        0     1                 $t.4
+    1089     1089        a     1                 R_IIC_MASTER_SlaveAddressSet
+    1092     1092        e     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_CallbackSet)
+    1092     1092        0     1                 $t.5
+    1093     1093        e     1                 R_IIC_MASTER_CallbackSet
+    10a0     10a0       18     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_StatusGet)
+    10a0     10a0        0     1                 $t.6
+    10a1     10a1       18     1                 R_IIC_MASTER_StatusGet
+    10b8     10b8       da     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.R_IIC_MASTER_Close)
+    10b8     10b8        0     1                 $t.7
+    10b9     10b9       da     1                 R_IIC_MASTER_Close
+    1192     1192      188     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.iic_master_open_hw_master)
+    1192     1192        0     1                 $t.8
+    1193     1193      188     1                 iic_master_open_hw_master
+    131c     131c      11e     4         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.iic_master_read_write)
+    131c     131c        0     1                 $t.9
+    131d     131d      11e     1                 iic_master_read_write
+    143c     143c      148     4         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.iic_master_rxi_isr)
+    143c     143c        0     1                 $t.10
+    143d     143d      148     1                 iic_master_rxi_isr
+    1482     1482        0     1                 $d.11
+    1486     1486        0     1                 $t.12
+    1584     1584      10a     4         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.iic_master_txi_isr)
+    1584     1584        0     1                 $t.13
+    1585     1585      10a     1                 iic_master_txi_isr
+    1690     1690       d0     4         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.iic_master_tei_isr)
+    1690     1690        0     1                 $t.14
+    1691     1691       d0     1                 iic_master_tei_isr
+    1760     1760      184     2         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.text.iic_master_eri_isr)
+    1760     1760        0     1                 $t.15
+    1761     1761      184     1                 iic_master_eri_isr
+    18e4     18e4       2c     2         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.text.SystemCoreClockUpdate)
+    18e4     18e4        0     1                 $t.2
+    18e5     18e5       2c     1                 SystemCoreClockUpdate
+    1910     1910       e8     4         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.text.bsp_clock_init)
+    1910     1910        0     1                 $t.5
+    1911     1911       e8     1                 bsp_clock_init
+    19f8     19f8       2a     2         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.text.R_BSP_Init_RTC)
+    19f8     19f8        0     1                 $t.8
+    19f9     19f9       2a     1                 R_BSP_Init_RTC
+    1a22     1a22       54     2         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.text.R_BSP_SoftwareDelay)
+    1a22     1a22        0     1                 $t.0
+    1a23     1a23       54     1                 R_BSP_SoftwareDelay
+    1a76     1a76        8     2         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.text.bsp_prv_software_delay_loop)
+    1a76     1a76        0     1                 sw_delay_loop
+    1a76     1a76        0     1                 $t.1
+    1a77     1a77        8     1                 bsp_prv_software_delay_loop
+    1a80     1a80       52     4         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.text.NMI_Handler)
+    1a80     1a80        0     1                 $t.1
+    1a81     1a81       52     1                 NMI_Handler
+    1ad4     1ad4       aa     4         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.text.bsp_irq_cfg)
+    1ad4     1ad4        0     1                 $t.0
+    1ad5     1ad5       aa     1                 bsp_irq_cfg
+    1b7e     1b7e       58     2         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.text.R_BSP_RegisterProtectEnable)
+    1b7e     1b7e        0     1                 $t.0
+    1b7f     1b7f       58     1                 R_BSP_RegisterProtectEnable
+    1bd6     1bd6       50     2         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.text.R_BSP_RegisterProtectDisable)
+    1bd6     1bd6        0     1                 $t.1
+    1bd7     1bd7       50     1                 R_BSP_RegisterProtectDisable
+    1c28     1c28        e     4         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.text.Reset_Handler)
+    1c28     1c28        0     1                 $t.0
+    1c29     1c29        e     1                 Reset_Handler
+    1c36     1c36        4     2         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.text.Default_Handler)
+    1c36     1c36        0     1                 $t.1
+    1c37     1c37        4     1                 Default_Handler
+    1c37     1c37        4     1                 HardFault_Handler
+    1c37     1c37        4     1                 MemManage_Handler
+    1c37     1c37        4     1                 BusFault_Handler
+    1c37     1c37        4     1                 UsageFault_Handler
+    1c37     1c37        4     1                 SecureFault_Handler
+    1c37     1c37        4     1                 SVC_Handler
+    1c37     1c37        4     1                 DebugMon_Handler
+    1c37     1c37        4     1                 PendSV_Handler
+    1c37     1c37        4     1                 SysTick_Handler
+    1c3c     1c3c       ee     4         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.text.SystemInit)
+    1c3c     1c3c        0     1                 $t.0
+    1c3d     1c3d       ee     1                 SystemInit
+    1d2a     1d2a        2     2         ./ra/board/ra6m5_ck/board_init.o:(.text.bsp_init)
+    1d2a     1d2a        0     1                 $t.0
+    1d2b     1d2b        2     1                 bsp_init
+    1d2c     1d2c       2c     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.text._init_tls)
+    1d2c     1d2c        0     1                 $t.0
+    1d2d     1d2d       2c     1                 _init_tls
+    1d48     1d48        0     1                 $d.1
+    1d58     1d58       14     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.text._set_tls)
+    1d58     1d58        0     1                 $t.0
+    1d59     1d59       14     1                 _set_tls
+    1d64     1d64        0     1                 $d.1
+    1d6c     1d6c       50     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.text.sprintf)
+    1d6c     1d6c        0     1                 $t.0
+    1d6d     1d6d       50     1                 sprintf
+    1db8     1db8        0     1                 $d.1
+    1dbc     1dbc       10     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.text.__file_str_put)
+    1dbc     1dbc        0     1                 $t.0
+    1dbd     1dbd       10     1                 __file_str_put
+    1dcc     1dcc      bb8     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.vfprintf)
+    1dcc     1dcc        0     1                 $t.0
+    1dcd     1dcd      bb8     1                 vfprintf
+    1dcd     1dcd      bb8     1                 __d_vfprintf
+    1e5a     1e5a        0     1                 $d.1
+    1e64     1e64        0     1                 $t.2
+    2054     2054        0     1                 $d.3
+    2062     2062        0     1                 $t.4
+    2978     2978        0     1                 $d.5
+    2984     2984      168     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.skip_to_arg)
+    2984     2984        0     1                 $t.6
+    2985     2985      168     1                 skip_to_arg
+    2ae8     2ae8        0     1                 $d.7
+    2aec     2aec       48     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.__ultoa_invert)
+    2aec     2aec        0     1                 $t.8
+    2aed     2aed       48     1                 __ultoa_invert
+    2b34     2b34        a     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.text.OUTLINED_FUNCTION_0)
+    2b34     2b34        0     1                 $t.9
+    2b35     2b35        a     1                 OUTLINED_FUNCTION_0
+    2b3e     2b3e       1a     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.text.strnlen)
+    2b3e     2b3e        0     1                 $t.0
+    2b3f     2b3f       1a     1                 strnlen
+    2b58     2b58      466     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.__dtoa_engine)
+    2b58     2b58        0     1                 $t.0
+    2b59     2b59      466     1                 __dtoa_engine
+    2fbe     2fbe       12     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.div10)
+    2fbe     2fbe        0     1                 $t.1
+    2fbf     2fbf       12     1                 div10
+    2fd0     2fd0       20     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.umulh)
+    2fd0     2fd0        0     1                 $t.2
+    2fd1     2fd1       20     1                 umulh
+    2fec     2fec        0     1                 $d.3
+    2ff0     2ff0      1dc     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.mulShiftAll64)
+    2ff0     2ff0        0     1                 $t.4
+    2ff1     2ff1      1dc     1                 mulShiftAll64
+    31cc     31cc       30     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.decimalLength17)
+    31cc     31cc        0     1                 $t.5
+    31cd     31cd       30     1                 decimalLength17
+    31fc     31fc        e     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.text.OUTLINED_FUNCTION_0)
+    31fc     31fc        0     1                 $t.6
+    31fd     31fd        e     1                 OUTLINED_FUNCTION_0
+    320c     320c       3c     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__pow5Factor)
+    320c     320c        0     1                 $t.0
+    320d     320d       3c     1                 __pow5Factor
+    3240     3240        0     1                 $d.1
+    3248     3248       d8     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__double_computePow5)
+    3248     3248        0     1                 $t.2
+    3249     3249       d8     1                 __double_computePow5
+    3314     3314        0     1                 $d.3
+    3320     3320       e4     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.__double_computeInvPow5)
+    3320     3320        0     1                 $t.4
+    3321     3321       e4     1                 __double_computeInvPow5
+    33f8     33f8        0     1                 $d.5
+    3404     3404       10     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.OUTLINED_FUNCTION_0)
+    3404     3404        0     1                 $t.6
+    3405     3405       10     1                 OUTLINED_FUNCTION_0
+    3414     3414       10     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.OUTLINED_FUNCTION_1)
+    3414     3414        0     1                 $t.7
+    3415     3415       10     1                 OUTLINED_FUNCTION_1
+    3424     3424       10     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.OUTLINED_FUNCTION_2)
+    3424     3424        0     1                 $t.8
+    3425     3425       10     1                 OUTLINED_FUNCTION_2
+    3434     3434        e     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.text.OUTLINED_FUNCTION_3)
+    3434     3434        0     1                 $t.9
+    3435     3435        e     1                 OUTLINED_FUNCTION_3
+    3444     3444        c     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.text.__log10Pow2)
+    3444     3444        0     1                 $t.0
+    3445     3445        c     1                 __log10Pow2
+    344c     344c        0     1                 $d.1
+    3450     3450        c     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.text.__log10Pow5)
+    3450     3450        0     1                 $t.2
+    3451     3451        c     1                 __log10Pow5
+    3458     3458        0     1                 $d.3
+    345c     345c       10     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.text.__pow5bits)
+    345c     345c        0     1                 $t.0
+    345d     345d       10     1                 __pow5bits
+    3468     3468        0     1                 $d.1
+    346c     346c       42     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.text.__umul128)
+    346c     346c        0     1                 $t.0
+    346d     346d       42     1                 __umul128
+    34ae     34ae       36     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.text.__shiftright128)
+    34ae     34ae        0     1                 $t.1
+    34af     34af       36     1                 __shiftright128
+    34e4     34e4        8     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.text.bzero)
+    34e4     34e4        0     1                 $t.0
+    34e5     34e5        8     1                 bzero
+    34e5     34e5        8     1                 __aeabi_memclr4
+    34e5     34e5        8     1                 __aeabi_memclr8
+    34e5     34e5        8     1                 __aeabi_memclr
+    34ec     34ec       14     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.text.memcpy)
+    34ec     34ec        0     1                 $t.0
+    34ed     34ed       14     1                 memcpy
+    34ed     34ed       14     1                 __aeabi_memcpy4
+    34ed     34ed       14     1                 __aeabi_memcpy8
+    34ed     34ed       14     1                 __aeabi_memcpy
+    3500     3500        e     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.text.memset)
+    3500     3500        0     1                 $t.0
+    3501     3501        e     1                 memset
+    3510     3510       10     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o):(.text)
+    3510     3510        0     1                 
+    3510     3510        0     1                 $t.0
+    3511     3511       10     1                 strlen
+    3520     3520       26     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libclang_rt.builtins.a(ashldi3.c.obj):(.text.__ashldi3)
+    3520     3520        0     1                 $t.0
+    3521     3521       26     1                 __ashldi3
+    3521     3521       26     1                 __aeabi_llsl
+    3546     3546       26     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libclang_rt.builtins.a(lshrdi3.c.obj):(.text.__lshrdi3)
+    3546     3546        0     1                 $t.0
+    3547     3547       26     1                 __lshrdi3
+    3547     3547       26     1                 __aeabi_llsr
+    356c     356c      288     2         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libclang_rt.builtins.a(udivmoddi4.c.obj):(.text.__udivmoddi4)
+    356c     356c        0     1                 $t.0
+    356d     356d      288     1                 __udivmoddi4
+    37f4     37f4       14     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libclang_rt.builtins.a(aeabi_uldivmod.S.obj):(.text)
+    37f4     37f4        0     1                 $t.0
+    37f5     37f5       14     1                 __aeabi_uldivmod
+    3808     3808       4e     4         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.version)
+    3808     3808        4     1                 g_fsp_version
+    380c     380c        6     1                 g_fsp_version_string
+    3812     3812       44     1                 g_fsp_version_build_string
+    3856     3856       44     1         <internal>:(.rodata.str1.1)
+    389a     389a        5     1         ./ra_gen/common_data.o:(.rodata.g_i2c_master0_extend)
+    389a     389a        5     1                 g_i2c_master0_extend
+    38a0     38a0       28     4         ./ra_gen/common_data.o:(.rodata.g_i2c_master0_cfg)
+    38a0     38a0       28     1                 g_i2c_master0_cfg
+    38c8     38c8        c     4         ./ra_gen/common_data.o:(.rodata.g_i2c_master0)
+    38c8     38c8        c     1                 g_i2c_master0
+    38d4     38d4       28     4         ./ra_gen/hal_data.o:(.rodata.g_comms_i2c_device0_lower_level_cfg)
+    38d4     38d4       28     1                 g_comms_i2c_device0_lower_level_cfg
+    38fc     38fc       14     4         ./ra_gen/hal_data.o:(.rodata.g_comms_i2c_device0_cfg)
+    38fc     38fc       14     1                 g_comms_i2c_device0_cfg
+    3910     3910        c     4         ./ra_gen/hal_data.o:(.rodata.g_comms_i2c_device0)
+    3910     3910        c     1                 g_comms_i2c_device0
+    391c     391c       10     4         ./ra_gen/hal_data.o:(.rodata.g_hs300x_sensor0_cfg)
+    391c     391c       10     1                 g_hs300x_sensor0_cfg
+    392c     392c       14     4         ./ra_gen/hal_data.o:(.rodata.g_console_write_cfg_extend)
+    392c     392c       14     1                 g_console_write_cfg_extend
+    3940     3940       20     4         ./ra_gen/hal_data.o:(.rodata.g_console_write_cfg)
+    3940     3940       20     1                 g_console_write_cfg
+    3960     3960      280     4         ./ra_gen/pin_data.o:(.rodata.g_bsp_pin_cfg_data)
+    3960     3960      280     1                 g_bsp_pin_cfg_data
+    3be0     3be0        c     4         ./ra_gen/pin_data.o:(.rodata.g_bsp_pin_cfg)
+    3be0     3be0        c     1                 g_bsp_pin_cfg
+    3bec     3bec       c0     2         ./ra_gen/vector_data.o:(.rodata.g_interrupt_event_link_select)
+    3bec     3bec       c0     1                 g_interrupt_event_link_select
+    3cac     3cac       18     4         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.rodata.g_comms_on_comms_i2c)
+    3cac     3cac       18     1                 g_comms_on_comms_i2c
+    3cc4     3cc4        6     2         ./ra/fsp/src/r_ioport/r_ioport.o:(.rodata.g_vbatt_pins_input)
+    3cc4     3cc4        6     1                 g_vbatt_pins_input
+    3ccc     3ccc       20     4         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.rodata.g_i2c_master_on_iic)
+    3ccc     3ccc       20     1                 g_i2c_master_on_iic
+    3cec     3cec        8     2         <internal>:(.rodata.cst8)
+    3cf4     3cf4        c     2         ./ra/board/ra6m5_ck/board_leds.o:(.rodata.g_bsp_prv_leds)
+    3cf4     3cf4        c     1                 g_bsp_prv_leds
+    3d00     3d00        8     4         ./ra/board/ra6m5_ck/board_leds.o:(.rodata.g_bsp_leds)
+    3d00     3d00        8     1                 g_bsp_leds
+    3d08     3d08      33c     8         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.rodata)
+    3d08     3d08       d0     1                 DOUBLE_POW5_SPLIT2
+    3dd8     3dd8       d0     1                 DOUBLE_POW5_TABLE
+    3ea8     3ea8       54     1                 POW5_OFFSETS
+    3f00     3f00       f0     1                 DOUBLE_POW5_INV_SPLIT2
+    3ff0     3ff0       54     1                 POW5_INV_OFFSETS
+    4044     4044        0     1         __usb_dev_descriptor_start_fs = .
+    4044     4044        0     1         __usb_cfg_descriptor_start_fs = .
+    4044     4044        0     1         __usb_interface_descriptor_start_fs = .
+    4044     4044        0     1         __usb_descriptor_end_fs = .
+    4044     4044        0     1         __usb_dev_descriptor_start_hs = .
+    4044     4044        0     1         __usb_cfg_descriptor_start_hs = .
+    4044     4044        0     1         __usb_interface_descriptor_start_hs = .
+    4044     4044        0     1         __usb_descriptor_end_hs = .
+       0        0       28     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o):(.eh_frame+0x0)
+    4070     4070        0     1         __ROM_End = .
+    4070     4070        0     1 __Vectors_Size = __Vectors_End - __Vectors
+    4070     4070        0     1 . = .
+    4070     4070        0     1 __itcm_data_pre_location = .
+    4070     4070        0     1 ITCM_BYTE_ALIGN_VALUE = ( __ITCM_LENGTH > 0 ) ? 16 : 4
+       0        0        0     4 .itcm_data
+       0        0        0     1         __tz_ITCM_S = ABSOLUTE ( __ITCM_START )
+       0        0        0     1         __itcm_data_start = .
+       0        0        0     1         . = ALIGN ( 8 )
+       0        0        0     1         __itcm_data_end = .
+       0        0        0     1         __tz_ITCM_N = DEFINED ( ITCM_NS_START ) ? ABSOLUTE ( ITCM_NS_START ) : ALIGN ( __itcm_data_end , 8192 )
+       0        0        0     1 __itcm_data_init_start = LOADADDR ( .itcm_data )
+       0        0        0     1 __itcm_data_init_end = LOADADDR ( .itcm_data ) + SIZEOF ( .itcm_data )
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0     4070     1 . = ( SIZEOF ( .itcm_data ) > 0 ) ? __itcm_data_init_end : __itcm_data_pre_location
+    4070     4070        0     1 __exidx_start = .
+    4070     4070        0     1 __exidx_end = .
+    4070     4070        0     1 __tz_RAM_S = ORIGIN ( RAM )
+20000000 20000000        0     1 .fsp_dtc_vector_table
+20000000 20000000        0     1         . = ORIGIN ( RAM )
+20000000     4070       10     4 .data
+20000000     4070        0     1         __data_start__ = .
+20000000     4070        0     1         . = ALIGN ( 4 )
+20000000     4070        0     1         __Code_In_RAM_Start = .
+20000000     4070        0     1         __Code_In_RAM_End = .
+20000000     4070        c     4         ./ra_gen/common_data.o:(.data.g_comms_i2c_bus0_extended_cfg)
+20000000     4070        c     1                 g_comms_i2c_bus0_extended_cfg
+2000000c     407c        4     1         ./ra_gen/hal_data.o:(.data.g_console_write_baud_setting)
+2000000c     407c        4     1                 g_console_write_baud_setting
+20000010     4080        0     1         . = ALIGN ( 4 )
+20000010     4080        0     1         . = ALIGN ( 4 )
+20000010     4080        0     1         PROVIDE_HIDDEN ( __init_array_start = . )
+20000010     4080        0     1         PROVIDE_HIDDEN ( __init_array_end = . )
+20000010     4080        0     1         . = ALIGN ( 4 )
+20000010     4080        0     1         . = ALIGN ( 4 )
+20000010     4080        0     1         __data_end__ = .
+20000010     4080        0     1 __etext = LOADADDR ( .data )
+20000010     4080        1     1 .tdata
+20000010     4080        1     1         BYTE ( 0xFF )
+20000011     4081        0     1 PROVIDE ( __tls_base = ADDR ( .tdata ) )
+20000011     4081        0     1 PROVIDE ( __tdata_source = LOADADDR ( .tdata ) )
+20000011     4081        0     1 PROVIDE ( __tdata_size = SIZEOF ( .tdata ) )
+20000011     4081        0     1 PROVIDE ( __tls_align = MAX ( ALIGNOF ( .tdata ) , ALIGNOF ( .tbss ) ) )
+20000011 20000011        0     1 .tbss
+20000011 20000011        0     1         PROVIDE ( __tls_end = . )
+20000011 20000011        0     1 PROVIDE ( __tbss_offset = ADDR ( .tbss ) - ADDR ( .tdata ) )
+20000011 20000011        0     1 PROVIDE ( __tbss_size = SIZEOF ( .tbss ) )
+20000011 20000011        0     1 PROVIDE ( __arm32_tls_tcb_offset = MAX ( 8 , __tls_align ) )
+20000011 20000011        0     1 . = .
+20000011 20000011        0     1 __dtcm_data_pre_location = LOADADDR ( .tdata ) + SIZEOF ( .tdata )
+20000011 20000011        0     1 DTCM_BYTE_ALIGN_VALUE = ( __DTCM_LENGTH > 0 ) ? 16 : 4
+       0        0        0     4 .dtcm_data
+       0        0        0     1         __tz_DTCM_S = ABSOLUTE ( __DTCM_START )
+       0        0        0     1         __dtcm_data_start = .
+       0        0        0     1         . = ALIGN ( 8 )
+       0        0        0     1         __dtcm_data_end = .
+       0        0        0     1 . = __dtcm_data_end
+       0        0        0     1 .dtcm_bss
+       0        0        0     1         __dtcm_bss_start = .
+       0        0        0     1         . = ALIGN ( 8 )
+       0        0        0     1         __dtcm_bss_end = .
+       0        0        0     1         __tz_DTCM_N = DEFINED ( DTCM_NS_START ) ? ABSOLUTE ( DTCM_NS_START ) : ALIGN ( __dtcm_bss_end , 8192 )
+       0        0        0     1 __dtcm_data_init_start = LOADADDR ( .dtcm_data )
+       0        0        0     1 __dtcm_data_init_end = LOADADDR ( .dtcm_data ) + SIZEOF ( .dtcm_data )
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0        0     1 
+       0        0     4081     1 . = ( SIZEOF ( .dtcm_data ) > 0 ) ? __dtcm_data_init_end : __dtcm_data_pre_location
+    4081     4081        0     1 sgstubs_pre_location = .
+    4081     4081        0     1 SGSTUBS_LOC = ( DEFINED ( PROJECT_SECURE ) && DEFINED ( FLASH_NSC_START ) ) ? ABSOLUTE ( FLASH_NSC_START ) : ALIGN ( 1024 )
+    4400     4400        0  1024 .gnu.sgstubs
+    4400     4400        0     1         __tz_FLASH_C = DEFINED ( FLASH_NSC_START ) ? ABSOLUTE ( FLASH_NSC_START ) : __RESERVE_NS_RAM ? ABSOLUTE ( FLASH_START + FLASH_LENGTH ) : ALIGN ( 1024 )
+    4400     4400        0     1         _start_sg = .
+    4400     4400        0     1         . = ALIGN ( 32 )
+    4400     4400        0     1         _end_sg = .
+    4400     4400        0     1 __tz_FLASH_N = DEFINED ( FLASH_NS_START ) ? ABSOLUTE ( FLASH_NS_START ) : __RESERVE_NS_RAM ? ABSOLUTE ( FLASH_START + FLASH_LENGTH ) : FLASH_LENGTH < 32768 ? FLASH_LENGTH : ALIGN ( 32768 )
+    4400     4400        0     1 __tz_QSPI_FLASH_S = ORIGIN ( QSPI_FLASH )
+60000000 60000000        0     1 .qspi_flash
+60000000 60000000        0     1         __qspi_flash_start__ = .
+60000000 60000000        0     1         __qspi_flash_end__ = .
+60000000 60000000        0     1 __qspi_flash_code_size__ = __qspi_flash_end__ - __qspi_flash_start__
+60000000 60000000        0     1 __qspi_flash_code_addr__ = sgstubs_pre_location
+60000000 60000000        0     1 .qspi_non_retentive
+60000000 60000000        0     1         __qspi_non_retentive_start__ = .
+60000000 60000000        0     1         __qspi_non_retentive_end__ = .
+60000000 60000000        0     1 __qspi_non_retentive_size__ = __qspi_non_retentive_end__ - __qspi_non_retentive_start__
+60000000 60000000        0     1 __qspi_region_max_size__ = 0x4000000
+60000000 60000000        0     1 __qspi_region_start_address__ = __qspi_flash_start__
+60000000 60000000        0     1 __qspi_region_end_address__ = __qspi_flash_start__ + __qspi_region_max_size__
+60000000 60000000        0     1 __tz_QSPI_FLASH_N = __qspi_non_retentive_end__
+68000000 68000000        0     1 .OSPI_DEVICE_0_NO_LOAD
+68000000 68000000        0     1         . = ALIGN ( 4 )
+68000000 68000000        0     1         __ospi_device_0_start__ = .
+68000000 68000000        0     1         . = ALIGN ( 4 )
+68000000 68000000        0     1         __ospi_device_0_end__ = .
+70000000 70000000        0     1 .OSPI_DEVICE_1_NO_LOAD
+70000000 70000000        0     1         . = ALIGN ( 4 )
+70000000 70000000        0     1         __ospi_device_1_start__ = .
+70000000 70000000        0     1         . = ALIGN ( 4 )
+70000000 70000000        0     1         __ospi_device_1_end__ = .
+70000000 70000000        0     1 __tz_OSPI_DEVICE_0_S = ORIGIN ( OSPI_DEVICE_0 )
+68000000 68000000        0     1 .OSPI_DEVICE_0
+68000000 68000000        0     1         __ospi_device_0_start__ = .
+68000000 68000000        0     1         __ospi_device_0_end__ = .
+68000000 68000000        0     1 __ospi_device_0_code_size__ = __ospi_device_0_end__ - __ospi_device_0_start__
+68000000 68000000        0     1 __ospi_device_0_code_addr__ = sgstubs_pre_location + ( SIZEOF ( .qspi_non_retentive ) )
+68000000 68000000        0     1 .ospi_device_0_non_retentive
+68000000 68000000        0     1         __ospi_device_0_non_retentive_start__ = .
+68000000 68000000        0     1         __ospi_device_0_non_retentive_end__ = .
+68000000 68000000        0     1 __ospi_device_0_non_retentive_size__ = __ospi_device_0_non_retentive_end__ - __ospi_device_0_non_retentive_start__
+68000000 68000000        0     1 __ospi_device_0_region_max_size__ = 0x8000000
+68000000 68000000        0     1 __ospi_device_0_region_start_address__ = __ospi_device_0_start__
+68000000 68000000        0     1 __ospi_device_0_region_end_address__ = __ospi_device_0_start__ + __ospi_device_0_region_max_size__
+68000000 68000000        0     1 __tz_OSPI_DEVICE_0_N = __ospi_device_0_non_retentive_end__
+68000000 68000000        0     1 __tz_OSPI_DEVICE_1_S = ORIGIN ( OSPI_DEVICE_1 )
+70000000 70000000        0     1 .OSPI_DEVICE_1
+70000000 70000000        0     1         __ospi_device_1_start__ = .
+70000000 70000000        0     1         __ospi_device_1_end__ = .
+70000000 70000000        0     1 __ospi_device_1_code_size__ = __ospi_device_1_end__ - __ospi_device_1_start__
+70000000 70000000        0     1 __ospi_device_1_code_addr__ = sgstubs_pre_location + ( SIZEOF ( .qspi_non_retentive ) + SIZEOF ( .ospi_device_0_non_retentive ) )
+70000000 70000000        0     1 .ospi_device_1_non_retentive
+70000000 70000000        0     1         __ospi_device_1_non_retentive_start__ = .
+70000000 70000000        0     1         __ospi_device_1_non_retentive_end__ = .
+70000000 70000000        0     1 __ospi_device_1_non_retentive_size__ = __ospi_device_1_non_retentive_end__ - __ospi_device_1_non_retentive_start__
+70000000 70000000        0     1 __ospi_device_1_region_max_size__ = 0x10000000
+70000000 70000000        0     1 __ospi_device_1_region_start_address__ = __ospi_device_1_start__
+70000000 70000000        0     1 __ospi_device_1_region_end_address__ = __ospi_device_1_start__ + __ospi_device_1_region_max_size__
+70000000 70000000        0     1 __tz_OSPI_DEVICE_1_N = __ospi_device_1_non_retentive_end__
+20000014 20000014       1c     4 .noinit
+20000014 20000014        0     1         . = ALIGN ( 4 )
+20000014 20000014        0     1         __noinit_start = .
+20000014 20000014       1c     4         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.noinit)
+20000014 20000014       1c     1                 g_clock_freq
+20000030 20000030        0     1         . = ALIGN ( 8 )
+20000030 20000030        0     1         __noinit_end = .
+20000030 20000030      28c     4 .bss
+20000030 20000030        0     1         . = ALIGN ( 4 )
+20000030 20000030        0     1         __bss_start__ = .
+20000030 20000030        1     1         ./src/hal_entry.o:(.bss.hs300x_complete)
+20000030 20000030        1     1                 hs300x_complete
+20000031 20000031        1     1         ./src/hal_entry.o:(.bss.is_transfer_complete)
+20000031 20000031        1     1                 is_transfer_complete
+20000034 20000034       40     4         ./ra_gen/common_data.o:(.bss.g_i2c_master0_ctrl)
+20000034 20000034       40     1                 g_i2c_master0_ctrl
+20000074 20000074        8     4         ./ra_gen/common_data.o:(.bss.g_ioport_ctrl)
+20000074 20000074        8     1                 g_ioport_ctrl
+2000007c 2000007c       1c     4         ./ra_gen/hal_data.o:(.bss.g_hs300x_sensor0_ctrl)
+2000007c 2000007c       1c     1                 g_hs300x_sensor0_ctrl
+20000098 20000098       20     4         ./ra_gen/hal_data.o:(.bss.g_comms_i2c_device0_ctrl)
+20000098 20000098       20     1                 g_comms_i2c_device0_ctrl
+200000b8 200000b8       30     4         ./ra_gen/hal_data.o:(.bss.g_console_write_ctrl)
+200000b8 200000b8       30     1                 g_console_write_ctrl
+200000e8 200000e8       40     4         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.bss.g_bsp_group_irq_sources)
+200000e8 200000e8       40     1                 g_bsp_group_irq_sources
+20000128 20000128        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_io.o:(.bss.g_protect_pfswe_counter)
+20000128 20000128        4     1                 g_protect_pfswe_counter
+2000012c 2000012c      180     4         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.bss.gp_renesas_isr_context)
+2000012c 2000012c      180     1                 gp_renesas_isr_context
+200002ac 200002ac        8     2         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.bss.g_protect_counters)
+200002ac 200002ac        8     1                 g_protect_counters
+200002b4 200002b4        4     4         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.bss.SystemCoreClock)
+200002b4 200002b4        4     1                 SystemCoreClock
+200002b8 200002b8        4     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.bss)
+200002b8 200002b8        4     1                 __tls
+200002bc 200002bc        0     1         . = ALIGN ( 4 )
+200002bc 200002bc        0     1         __bss_end__ = .
+200002bc 200002bc        4     1 .heap
+200002bc 200002bc        4     1         . = ALIGN ( 8 )
+200002c0 200002c0        0     1         __HeapBase = .
+200002c0 200002c0        0     1         __HeapLimit = .
+200002c0 200002c0        0     1 PROVIDE ( __heap_start = __HeapBase )
+200002c0 200002c0        0     1 PROVIDE ( __heap_end = __HeapLimit )
+200002c0 200002c0      400     8 .stack_dummy
+200002c0 200002c0        0     1         . = ALIGN ( 8 )
+200002c0 200002c0        0     1         __StackLimit = .
+200002c0 200002c0      400     8         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.stack)
+200002c0 200002c0      400     1                 g_main_stack
+200006c0 200006c0        0     1         __StackTop = .
+200006c0 200006c0        0     1         __StackTopAll = .
+200006c0 200006c0        0     1 __RAM_segment_used_end__ = ALIGN ( __StackTopAll , 4 )
+200006c0 200006c0        0     1 __tz_RAM_C = DEFINED ( RAM_NSC_START ) ? ABSOLUTE ( RAM_NSC_START - RAM_NS_BUFFER_BLOCK_LENGTH ) : __RESERVE_NS_RAM ? ABSOLUTE ( RAM_NS_BUFFER_BLOCK_START ) : ALIGN ( __RAM_segment_used_end__ , 1024 )
+200006c0 200006c0        0     1 __tz_RAM_N = DEFINED ( RAM_NS_START ) ? ABSOLUTE ( RAM_NS_START - RAM_NS_BUFFER_BLOCK_LENGTH ) : __RESERVE_NS_RAM ? ABSOLUTE ( RAM_NS_BUFFER_BLOCK_START ) : ALIGN ( __tz_RAM_C , 8192 )
+200006c0 200006c0        0     1 .ns_buffer
+200006c0 200006c0        0     1         . = __RESERVE_NS_RAM ? ABSOLUTE ( RAM_NS_BUFFER_START & 0xFFFFFFE0 ) : .
+ 8000000  8000000        0     1 .data_flash
+ 8000000  8000000        0     1         . = ORIGIN ( DATA_FLASH )
+ 8000000  8000000        0     1         __tz_DATA_FLASH_S = .
+ 8000000  8000000        0     1         __Data_Flash_Start = .
+ 8000000  8000000        0     1         __Data_Flash_End = .
+ 8000000  8000000        0     1         __tz_DATA_FLASH_N = DEFINED ( DATA_FLASH_NS_START ) ? ABSOLUTE ( DATA_FLASH_NS_START ) : __RESERVE_NS_RAM ? ABSOLUTE ( DATA_FLASH_START + DATA_FLASH_LENGTH ) : ALIGN ( 1024 )
+ 8000000  8000000        0     1 __tz_SDRAM_S = ORIGIN ( SDRAM )
+80010000 80010000        0     1 .sdram
+80010000 80010000        0     1         __SDRAM_Start = .
+80010000 80010000        0     1         __SDRAM_End = .
+80010000 80010000        0     1 __tz_SDRAM_N = __SDRAM_End
+80010000 80010000        0     1 __tz_ID_CODE_S = ORIGIN ( ID_CODE )
+80010000 80010000        0     1 __tz_ID_CODE_N = __tz_ID_CODE_S
+       0        0        0     1 .id_code
+       0        0        0     1         __ID_Code_Start = .
+       0        0        0     1         __ID_Code_End = .
+       0        0        0     1 __tz_OPTION_SETTING_S = ORIGIN ( OPTION_SETTING_OFS )
+ 100a100  100a100       14     4 .option_setting_ofs
+ 100a100  100a100        0     1         __OPTION_SETTING_OFS_Start = .
+ 100a100  100a100        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_ofs0)
+ 100a100  100a100        4     1                 g_bsp_rom_ofs0
+ 100a104  100a104        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_OFS_Start + 0x04 : __OPTION_SETTING_OFS_Start
+ 100a104  100a104        c     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_OFS_Start + 0x10 : __OPTION_SETTING_OFS_Start
+ 100a110  100a110        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_dualsel)
+ 100a110  100a110        4     1                 g_bsp_rom_dualsel
+ 100a114  100a114        0     1         __OPTION_SETTING_OFS_End = .
+ 100a134  100a134        4     4 .option_setting_sas
+ 100a134  100a134        0     1         __OPTION_SETTING_SAS_Start = .
+ 100a134  100a134        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_sas)
+ 100a134  100a134        4     1                 g_bsp_rom_sas
+ 100a138  100a138        0     1         __OPTION_SETTING_SAS_End = .
+ 100a138  100a138        0     1 __tz_OPTION_SETTING_N = ABSOLUTE ( OPTION_SETTING_START_NS )
+ 100a100  100a100        0     1 .option_setting_ns
+ 100a100  100a100        0     1         __OPTION_SETTING_NS_Start = .
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x04 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x10 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x40 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x44 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x48 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x4C : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x60 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x64 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x68 : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         . = USE_OPTION_SETTING_NS ? __OPTION_SETTING_NS_Start + 0x6C : __OPTION_SETTING_NS_Start
+ 100a100  100a100        0     1         __OPTION_SETTING_NS_End = .
+ 100a100  100a100        0     1 __tz_OPTION_SETTING_S_S = ORIGIN ( OPTION_SETTING_S )
+ 100a200  100a200       d0     4 .option_setting_s
+ 100a200  100a200        0     1         __OPTION_SETTING_S_Start = .
+ 100a200  100a200        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_ofs1_sec)
+ 100a200  100a200        4     1                 g_bsp_rom_ofs1_sec
+ 100a204  100a204        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x04 : __OPTION_SETTING_S_Start
+ 100a204  100a204        c     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x10 : __OPTION_SETTING_S_Start
+ 100a210  100a210        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_banksel_sec)
+ 100a210  100a210        4     1                 g_bsp_rom_banksel_sec
+ 100a214  100a214       2c     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x40 : __OPTION_SETTING_S_Start
+ 100a240  100a240        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sec0)
+ 100a240  100a240        4     1                 g_bsp_rom_bps_sec0
+ 100a244  100a244        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x44 : __OPTION_SETTING_S_Start
+ 100a244  100a244        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sec1)
+ 100a244  100a244        4     1                 g_bsp_rom_bps_sec1
+ 100a248  100a248        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x48 : __OPTION_SETTING_S_Start
+ 100a248  100a248        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sec2)
+ 100a248  100a248        4     1                 g_bsp_rom_bps_sec2
+ 100a24c  100a24c        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x4C : __OPTION_SETTING_S_Start
+ 100a24c  100a24c        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sec3)
+ 100a24c  100a24c        4     1                 g_bsp_rom_bps_sec3
+ 100a250  100a250       10     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x60 : __OPTION_SETTING_S_Start
+ 100a260  100a260        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_pbps_sec0)
+ 100a260  100a260        4     1                 g_bsp_rom_pbps_sec0
+ 100a264  100a264        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x64 : __OPTION_SETTING_S_Start
+ 100a264  100a264        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_pbps_sec1)
+ 100a264  100a264        4     1                 g_bsp_rom_pbps_sec1
+ 100a268  100a268        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x68 : __OPTION_SETTING_S_Start
+ 100a268  100a268        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_pbps_sec2)
+ 100a268  100a268        4     1                 g_bsp_rom_pbps_sec2
+ 100a26c  100a26c        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x6C : __OPTION_SETTING_S_Start
+ 100a26c  100a26c        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_pbps_sec3)
+ 100a26c  100a26c        4     1                 g_bsp_rom_pbps_sec3
+ 100a270  100a270       10     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x80 : __OPTION_SETTING_S_Start
+ 100a280  100a280        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_ofs1_sel)
+ 100a280  100a280        4     1                 g_bsp_rom_ofs1_sel
+ 100a284  100a284        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x84 : __OPTION_SETTING_S_Start
+ 100a284  100a284        c     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0x90 : __OPTION_SETTING_S_Start
+ 100a290  100a290        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_banksel_sel)
+ 100a290  100a290        4     1                 g_bsp_rom_banksel_sel
+ 100a294  100a294       2c     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0xC0 : __OPTION_SETTING_S_Start
+ 100a2c0  100a2c0        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sel0)
+ 100a2c0  100a2c0        4     1                 g_bsp_rom_bps_sel0
+ 100a2c4  100a2c4        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0xC4 : __OPTION_SETTING_S_Start
+ 100a2c4  100a2c4        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sel1)
+ 100a2c4  100a2c4        4     1                 g_bsp_rom_bps_sel1
+ 100a2c8  100a2c8        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0xC8 : __OPTION_SETTING_S_Start
+ 100a2c8  100a2c8        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sel2)
+ 100a2c8  100a2c8        4     1                 g_bsp_rom_bps_sel2
+ 100a2cc  100a2cc        0     1         . = PROJECT_SECURE_OR_FLAT ? __OPTION_SETTING_S_Start + 0xCC : __OPTION_SETTING_S_Start
+ 100a2cc  100a2cc        4     4         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.option_setting_bps_sel3)
+ 100a2cc  100a2cc        4     1                 g_bsp_rom_bps_sel3
+ 100a2d0  100a2d0        0     1         __OPTION_SETTING_S_End = .
+ 100a2d0  100a2d0        0     1 __tz_OPTION_SETTING_S_N = __OPTION_SETTING_S_End
+       0        0     40c9     1 .debug_loclists
+       0        0      1fb     1         ./src/hal_entry.o:(.debug_loclists)
+     1fb      1fb      161     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_loclists)
+     35c      35c       2d     1         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_loclists)
+     389      389       70     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_loclists)
+     3f9      3f9      25f     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_loclists)
+     658      658      7a9     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_loclists)
+     e01      e01      5bd     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_loclists)
+    13be     13be      6e0     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_loclists)
+    1a9e     1a9e      159     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_loclists)
+    1bf7     1bf7       1d     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_loclists)
+    1c14     1c14       d7     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_loclists)
+    1ceb     1ceb       35     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_loclists)
+    1d20     1d20       16     1         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_loclists)
+    1d36     1d36       55     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_loclists)
+    1d8b     1d8b       37     1         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_loclists)
+    1dc2     1dc2       51     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_loclists)
+    1e13     1e13       2a     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_loclists)
+    1e3d     1e3d       1e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_loclists)
+    1e5b     1e5b       3f     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_loclists)
+    1e9a     1e9a      ebf     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_loclists)
+    2d59     2d59       25     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_loclists)
+    2d7e     2d7e      dc3     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_loclists)
+    3b41     3b41      214     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_loclists)
+    3d55     3d55       34     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_loclists)
+    3d89     3d89       1e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_loclists)
+    3da7     3da7      24f     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_loclists)
+    3ff6     3ff6       1b     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_loclists)
+    4011     4011       7a     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_loclists)
+    408b     408b       3e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_loclists)
+       0        0     36c8     1 .debug_abbrev
+       0        0      339     1         ./src/hal_entry.o:(.debug_abbrev)
+     339      339      222     1         ./ra_gen/common_data.o:(.debug_abbrev)
+     55b      55b      251     1         ./ra_gen/hal_data.o:(.debug_abbrev)
+     7ac      7ac       3c     1         ./ra_gen/main.o:(.debug_abbrev)
+     7e8      7e8       d5     1         ./ra_gen/pin_data.o:(.debug_abbrev)
+     8bd      8bd       a8     1         ./ra_gen/vector_data.o:(.debug_abbrev)
+     965      965      234     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_abbrev)
+     b99      b99      136     1         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_abbrev)
+     ccf      ccf      17d     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_abbrev)
+     e4c      e4c      272     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_abbrev)
+    10be     10be      415     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_abbrev)
+    14d3     14d3      365     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_abbrev)
+    1838     1838      455     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_abbrev)
+    1c8d     1c8d      2b9     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_abbrev)
+    1f46     1f46      140     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_abbrev)
+    2086     2086       a4     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_abbrev)
+    212a     212a      1ff     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_abbrev)
+    2329     2329       44     1         ./ra/fsp/src/bsp/mcu/all/bsp_io.o:(.debug_abbrev)
+    236d     236d      18c     1         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_abbrev)
+    24f9     24f9      221     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_abbrev)
+    271a     271a       42     1         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.debug_abbrev)
+    275c     275c       80     1         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_abbrev)
+    27dc     27dc       4b     1         ./ra/fsp/src/bsp/mcu/all/bsp_security.o:(.debug_abbrev)
+    2827     2827       a5     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_abbrev)
+    28cc     28cc      1bd     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_abbrev)
+    2a89     2a89       43     1         ./ra/board/ra6m5_ck/board_init.o:(.debug_abbrev)
+    2acc     2acc       91     1         ./ra/board/ra6m5_ck/board_leds.o:(.debug_abbrev)
+    2b5d     2b5d       2e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_errno_errno.c.o):(.debug_abbrev)
+    2b8b     2b8b       74     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_abbrev)
+    2bff     2bff       76     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_abbrev)
+    2c75     2c75       21     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_abbrev)
+    2c96     2c96       cf     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_abbrev)
+    2d65     2d65       9a     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_abbrev)
+    2dff     2dff      21a     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_abbrev)
+    3019     3019       87     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_abbrev)
+    30a0     30a0      1f9     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_abbrev)
+    3299     3299       f9     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_abbrev)
+    3392     3392       64     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_abbrev)
+    33f6     33f6       62     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_abbrev)
+    3458     3458       96     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_abbrev)
+    34ee     34ee       94     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_abbrev)
+    3582     3582       a0     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_abbrev)
+    3622     3622       85     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_abbrev)
+    36a7     36a7       21     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o):(.debug_abbrev)
+       0        0    27524     1 .debug_info
+       0        0     1a8a     1         ./src/hal_entry.o:(.debug_info)
+    1a8a     1a8a     1baf     1         ./ra_gen/common_data.o:(.debug_info)
+    3639     3639     2c87     1         ./ra_gen/hal_data.o:(.debug_info)
+    62c0     62c0       37     1         ./ra_gen/main.o:(.debug_info)
+    62f7     62f7      495     1         ./ra_gen/pin_data.o:(.debug_info)
+    678c     678c      4f6     1         ./ra_gen/vector_data.o:(.debug_info)
+    6c82     6c82      b82     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_info)
+    7804     7804      7b8     1         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_info)
+    7fbc     7fbc      81c     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_info)
+    87d8     87d8      f15     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_info)
+    96ed     96ed     721d     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_info)
+   1090a    1090a     4ea1     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_info)
+   157ab    157ab     600b     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_info)
+   1b7b6    1b7b6     44f7     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_info)
+   1fcad    1fcad      55b     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_info)
+   20208    20208       e4     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_info)
+   202ec    202ec      d05     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_info)
+   20ff1    20ff1       43     1         ./ra/fsp/src/bsp/mcu/all/bsp_io.o:(.debug_info)
+   21034    21034     156f     1         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_info)
+   225a3    225a3     2da0     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_info)
+   25343    25343      109     1         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.debug_info)
+   2544c    2544c       87     1         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_info)
+   254d3    254d3       83     1         ./ra/fsp/src/bsp/mcu/all/bsp_security.o:(.debug_info)
+   25556    25556       99     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_info)
+   255ef    255ef      52d     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_info)
+   25b1c    25b1c       3b     1         ./ra/board/ra6m5_ck/board_init.o:(.debug_info)
+   25b57    25b57       88     1         ./ra/board/ra6m5_ck/board_leds.o:(.debug_info)
+   25bdf    25bdf       2e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_errno_errno.c.o):(.debug_info)
+   25c0d    25c0d       64     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_info)
+   25c71    25c71       6e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_info)
+   25cdf    25cdf      117     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_info)
+   25df6    25df6      160     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_info)
+   25f56    25f56      13c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_info)
+   26092    26092      530     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_info)
+   265c2    265c2       6e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_info)
+   26630    26630      79f     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_info)
+   26dcf    26dcf      25e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_info)
+   2702d    2702d       8b     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_info)
+   270b8    270b8       6e     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_info)
+   27126    27126      169     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_info)
+   2728f    2728f       76     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_info)
+   27305    27305       97     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_info)
+   2739c    2739c       78     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_info)
+   27414    27414      110     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o):(.debug_info)
+       0        0      589     1 .debug_rnglists
+       0        0       32     1         ./src/hal_entry.o:(.debug_rnglists)
+      32       32       30     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_rnglists)
+      62       62       20     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_rnglists)
+      82       82       2d     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_rnglists)
+      af       af       a4     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_rnglists)
+     153      153       7b     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_rnglists)
+     1ce      1ce       f9     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_rnglists)
+     2c7      2c7       44     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_rnglists)
+     30b      30b       1a     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_rnglists)
+     325      325       17     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_rnglists)
+     33c      33c       17     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_rnglists)
+     353      353       24     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_rnglists)
+     377      377       17     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_rnglists)
+     38e      38e       18     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_rnglists)
+     3a6      3a6      135     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_rnglists)
+     4db      4db       58     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_rnglists)
+     533      533       28     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_rnglists)
+     55b      55b       17     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_rnglists)
+     572      572       17     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_rnglists)
+       0        0     d418     1 .debug_str_offsets
+       0        0      c6c     1         ./src/hal_entry.o:(.debug_str_offsets)
+     c6c      c6c      d48     1         ./ra_gen/common_data.o:(.debug_str_offsets)
+    19b4     19b4     1118     1         ./ra_gen/hal_data.o:(.debug_str_offsets)
+    2acc     2acc       1c     1         ./ra_gen/main.o:(.debug_str_offsets)
+    2ae8     2ae8      424     1         ./ra_gen/pin_data.o:(.debug_str_offsets)
+    2f0c     2f0c      4cc     1         ./ra_gen/vector_data.o:(.debug_str_offsets)
+    33d8     33d8      5b4     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_str_offsets)
+    398c     398c      4d4     1         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_str_offsets)
+    3e60     3e60      4bc     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_str_offsets)
+    431c     431c      6bc     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_str_offsets)
+    49d8     49d8     1ff0     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_str_offsets)
+    69c8     69c8     1840     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_str_offsets)
+    8208     8208     18ec     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_str_offsets)
+    9af4     9af4      f70     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_str_offsets)
+    aa64     aa64      43c     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_str_offsets)
+    aea0     aea0       6c     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_str_offsets)
+    af0c     af0c      64c     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_str_offsets)
+    b558     b558       24     1         ./ra/fsp/src/bsp/mcu/all/bsp_io.o:(.debug_str_offsets)
+    b57c     b57c      8a8     1         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_str_offsets)
+    be24     be24      b60     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_str_offsets)
+    c984     c984       6c     1         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.debug_str_offsets)
+    c9f0     c9f0       40     1         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_str_offsets)
+    ca30     ca30       34     1         ./ra/fsp/src/bsp/mcu/all/bsp_security.o:(.debug_str_offsets)
+    ca64     ca64       38     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_str_offsets)
+    ca9c     ca9c      19c     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_str_offsets)
+    cc38     cc38       1c     1         ./ra/board/ra6m5_ck/board_init.o:(.debug_str_offsets)
+    cc54     cc54       3c     1         ./ra/board/ra6m5_ck/board_leds.o:(.debug_str_offsets)
+    cc90     cc90       1c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_errno_errno.c.o):(.debug_str_offsets)
+    ccac     ccac       30     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_str_offsets)
+    ccdc     ccdc       34     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_str_offsets)
+    cd10     cd10       94     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_str_offsets)
+    cda4     cda4       84     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_str_offsets)
+    ce28     ce28      1b0     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_str_offsets)
+    cfd8     cfd8       30     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_str_offsets)
+    d008     d008      1c0     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_str_offsets)
+    d1c8     d1c8       a4     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_str_offsets)
+    d26c     d26c       38     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_str_offsets)
+    d2a4     d2a4       34     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_str_offsets)
+    d2d8     d2d8       9c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_str_offsets)
+    d374     d374       30     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_str_offsets)
+    d3a4     d3a4       3c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_str_offsets)
+    d3e0     d3e0       38     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_str_offsets)
+       0        0     d066     1 .debug_str
+       0        0     d066     1         <internal>:(.debug_str)
+       0        0      854     1 .debug_addr
+       0        0       60     1         ./src/hal_entry.o:(.debug_addr)
+      60       60       28     1         ./ra_gen/common_data.o:(.debug_addr)
+      88       88       3c     1         ./ra_gen/hal_data.o:(.debug_addr)
+      c4       c4        c     1         ./ra_gen/main.o:(.debug_addr)
+      d0       d0       10     1         ./ra_gen/pin_data.o:(.debug_addr)
+      e0       e0       10     1         ./ra_gen/vector_data.o:(.debug_addr)
+      f0       f0       3c     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_addr)
+     12c      12c        c     1         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_addr)
+     138      138       20     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_addr)
+     158      158       3c     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_addr)
+     194      194      184     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_addr)
+     318      318       8c     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_addr)
+     3a4      3a4      15c     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_addr)
+     500      500       5c     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_addr)
+     55c      55c       20     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_addr)
+     57c      57c       18     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_addr)
+     594      594       1c     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_addr)
+     5b0      5b0        c     1         ./ra/fsp/src/bsp/mcu/all/bsp_io.o:(.debug_addr)
+     5bc      5bc       24     1         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_addr)
+     5e0      5e0       2c     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_addr)
+     60c      60c       54     1         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.debug_addr)
+     660      660       10     1         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_addr)
+     670      670       1c     1         ./ra/fsp/src/bsp/mcu/all/bsp_security.o:(.debug_addr)
+     68c      68c       18     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_addr)
+     6a4      6a4       24     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_addr)
+     6c8      6c8        c     1         ./ra/board/ra6m5_ck/board_init.o:(.debug_addr)
+     6d4      6d4       10     1         ./ra/board/ra6m5_ck/board_leds.o:(.debug_addr)
+     6e4      6e4        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_addr)
+     6f0      6f0       10     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_addr)
+     700      700        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_addr)
+     70c      70c        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_addr)
+     718      718       48     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_addr)
+     760      760        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_addr)
+     76c      76c       5c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_addr)
+     7c8      7c8       38     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_addr)
+     800      800       10     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_addr)
+     810      810        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_addr)
+     81c      81c       10     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_addr)
+     82c      82c       10     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_addr)
+     83c      83c        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_addr)
+     848      848        c     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_addr)
+       0        0       29     1 .comment
+       0        0       29     1         <internal>:(.comment)
+       0        0       4c     1 .ARM.attributes
+       0        0       4c     1         ./src/hal_entry.o:(.ARM.attributes)
+       0        0      f20     4 .debug_frame
+       0        0       80     4         ./src/hal_entry.o:(.debug_frame)
+      80       80       24     4         ./ra_gen/common_data.o:(.debug_frame)
+      a4       a4       24     4         ./ra_gen/hal_data.o:(.debug_frame)
+      c8       c8       30     4         ./ra_gen/main.o:(.debug_frame)
+      f8       f8       ec     4         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_frame)
+     1e4      1e4       30     4         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_frame)
+     214      214       64     4         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_frame)
+     278      278       c4     4         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_frame)
+     33c      33c      188     4         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_frame)
+     4c4      4c4      174     4         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_frame)
+     638      638      16c     4         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_frame)
+     7a4      7a4       e0     4         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_frame)
+     884      884       44     4         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_frame)
+     8c8      8c8       34     4         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_frame)
+     8fc      8fc       4c     4         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_frame)
+     948      948       38     4         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_frame)
+     980      980       40     4         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_frame)
+     9c0      9c0       30     4         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_frame)
+     9f0      9f0       40     4         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_frame)
+     a30      a30       44     4         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_frame)
+     a74      a74       24     4         ./ra/board/ra6m5_ck/board_init.o:(.debug_frame)
+     a98      a98       34     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_frame)
+     acc      acc       24     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_frame)
+     af0      af0       24     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_frame)
+     b14      b14       38     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_frame)
+     b4c      b4c       24     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_frame)
+     b70      b70       a0     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_frame)
+     c10      c10       34     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_frame)
+     c44      c44       d8     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_frame)
+     d1c      d1c       d0     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_frame)
+     dec      dec       34     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_frame)
+     e20      e20       24     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_frame)
+     e44      e44       60     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_frame)
+     ea4      ea4       24     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_frame)
+     ec8      ec8       34     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_frame)
+     efc      efc       24     4         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_frame)
+       0        0     5911     1 .debug_line
+       0        0      460     1         ./src/hal_entry.o:(.debug_line)
+     460      460      18a     1         ./ra_gen/common_data.o:(.debug_line)
+     5ea      5ea      1b4     1         ./ra_gen/hal_data.o:(.debug_line)
+     79e      79e       71     1         ./ra_gen/main.o:(.debug_line)
+     80f      80f       b8     1         ./ra_gen/pin_data.o:(.debug_line)
+     8c7      8c7       9f     1         ./ra_gen/vector_data.o:(.debug_line)
+     966      966      2d5     1         ./ra/fsp/src/rm_hs300x/rm_hs300x.o:(.debug_line)
+     c3b      c3b      110     1         ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o:(.debug_line)
+     d4b      d4b      170     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o:(.debug_line)
+     ebb      ebb      35a     1         ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o:(.debug_line)
+    1215     1215      ba5     1         ./ra/fsp/src/r_sci_uart/r_sci_uart.o:(.debug_line)
+    1dba     1dba      643     1         ./ra/fsp/src/r_ioport/r_ioport.o:(.debug_line)
+    23fd     23fd      b86     1         ./ra/fsp/src/r_iic_master/r_iic_master.o:(.debug_line)
+    2f83     2f83      3b3     1         ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o:(.debug_line)
+    3336     3336      101     1         ./ra/fsp/src/bsp/mcu/all/bsp_common.o:(.debug_line)
+    3437     3437      120     1         ./ra/fsp/src/bsp/mcu/all/bsp_delay.o:(.debug_line)
+    3557     3557      134     1         ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o:(.debug_line)
+    368b     368b       8a     1         ./ra/fsp/src/bsp/mcu/all/bsp_io.o:(.debug_line)
+    3715     3715       e5     1         ./ra/fsp/src/bsp/mcu/all/bsp_irq.o:(.debug_line)
+    37fa     37fa      197     1         ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o:(.debug_line)
+    3991     3991       8a     1         ./ra/fsp/src/bsp/mcu/all/bsp_rom_registers.o:(.debug_line)
+    3a1b     3a1b       ee     1         ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o:(.debug_line)
+    3b09     3b09       8a     1         ./ra/fsp/src/bsp/mcu/all/bsp_security.o:(.debug_line)
+    3b93     3b93       b5     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o:(.debug_line)
+    3c48     3c48      10f     1         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o:(.debug_line)
+    3d57     3d57       6e     1         ./ra/board/ra6m5_ck/board_init.o:(.debug_line)
+    3dc5     3dc5       a3     1         ./ra/board/ra6m5_ck/board_leds.o:(.debug_line)
+    3e68     3e68       43     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_errno_errno.c.o):(.debug_line)
+    3eab     3eab       a2     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o):(.debug_line)
+    3f4d     3f4d       b0     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o):(.debug_line)
+    3ffd     3ffd       44     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_line)
+    4041     4041       fa     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o):(.debug_line)
+    413b     413b       e0     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o):(.debug_line)
+    421b     421b      a94     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o):(.debug_line)
+    4caf     4caf       91     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o):(.debug_line)
+    4d40     4d40      59b     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o):(.debug_line)
+    52db     52db      1ed     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o):(.debug_line)
+    54c8     54c8       b3     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o):(.debug_line)
+    557b     557b       99     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o):(.debug_line)
+    5614     5614       d8     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o):(.debug_line)
+    56ec     56ec       a1     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o):(.debug_line)
+    578d     578d       9f     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o):(.debug_line)
+    582c     582c       96     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o):(.debug_line)
+    58c2     58c2       4f     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o):(.debug_line)
+       0        0     14f9     1 .debug_line_str
+       0        0     14f9     1         <internal>:(.debug_line_str)
+       0        0       40     1 .debug_aranges
+       0        0       20     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o):(.debug_aranges)
+      20       20       20     1         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o):(.debug_aranges)
+       0        0     2020     4 .symtab
+       0        0     2020     4         <internal>:(.symtab)
+       0        0      266     1 .shstrtab
+       0        0      266     1         <internal>:(.shstrtab)
+       0        0     1f02     1 .strtab
+       0        0     1f02     1         <internal>:(.strtab)
+
+Cross Reference Table
+
+Symbol                                            File
+hal_entry                                         ./src/hal_entry.o
+                                                  ./ra_gen/main.o
+g_bsp_leds                                        ./ra/board/ra6m5_ck/board_leds.o
+                                                  ./src/hal_entry.o
+g_console_write_ctrl                              ./ra_gen/hal_data.o
+                                                  ./src/hal_entry.o
+g_console_write_cfg                               ./ra_gen/hal_data.o
+                                                  ./src/hal_entry.o
+R_SCI_UART_Open                                   ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./src/hal_entry.o
+__aeabi_memclr4                                   D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o)
+                                                  ./src/hal_entry.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+g_hs300x_sensor0_cfg                              ./ra_gen/hal_data.o
+                                                  ./src/hal_entry.o
+g_hs300x_sensor0_ctrl                             ./ra_gen/hal_data.o
+                                                  ./src/hal_entry.o
+RM_HS300X_Open                                    ./ra/fsp/src/rm_hs300x/rm_hs300x.o
+                                                  ./src/hal_entry.o
+R_BSP_SoftwareDelay                               ./ra/fsp/src/bsp/mcu/all/bsp_delay.o
+                                                  ./src/hal_entry.o
+                                                  ./ra/fsp/src/rm_hs300x/rm_hs300x_ra_driver.o
+strlen                                            D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(strlen.S.o)
+                                                  ./src/hal_entry.o
+R_SCI_UART_Write                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./src/hal_entry.o
+g_protect_pfswe_counter                           ./ra/fsp/src/bsp/mcu/all/bsp_io.o
+                                                  ./src/hal_entry.o
+                                                  ./ra/fsp/src/r_ioport/r_ioport.o
+RM_HS300X_MeasurementStart                        ./ra/fsp/src/rm_hs300x/rm_hs300x.o
+                                                  ./src/hal_entry.o
+RM_HS300X_Read                                    ./ra/fsp/src/rm_hs300x/rm_hs300x.o
+                                                  ./src/hal_entry.o
+RM_HS300X_DataCalculate                           ./ra/fsp/src/rm_hs300x/rm_hs300x.o
+                                                  ./src/hal_entry.o
+sprintf                                           D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o)
+                                                  ./src/hal_entry.o
+R_BSP_WarmStart                                   ./src/hal_entry.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+g_ioport_ctrl                                     ./ra_gen/common_data.o
+                                                  ./src/hal_entry.o
+g_bsp_pin_cfg                                     ./ra_gen/pin_data.o
+                                                  ./src/hal_entry.o
+                                                  ./ra_gen/common_data.o
+R_IOPORT_Open                                     ./ra/fsp/src/r_ioport/r_ioport.o
+                                                  ./src/hal_entry.o
+user_uart_callback                                ./src/hal_entry.o
+                                                  ./ra_gen/hal_data.o
+hs300x_callback                                   ./src/hal_entry.o
+                                                  ./ra_gen/hal_data.o
+g_i2c_master0_extend                              ./ra_gen/common_data.o
+g_i2c_master0_cfg                                 ./ra_gen/common_data.o
+rm_comms_i2c_callback                             ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o
+                                                  ./ra_gen/common_data.o
+g_i2c_master0_ctrl                                ./ra_gen/common_data.o
+g_i2c_master0                                     ./ra_gen/common_data.o
+g_i2c_master_on_iic                               ./ra/fsp/src/r_iic_master/r_iic_master.o
+                                                  ./ra_gen/common_data.o
+g_comms_i2c_bus0_extended_cfg                     ./ra_gen/common_data.o
+                                                  ./ra_gen/hal_data.o
+g_comms_i2c_device0_lower_level_cfg               ./ra_gen/hal_data.o
+g_comms_i2c_device0_cfg                           ./ra_gen/hal_data.o
+rm_hs300x_callback                                ./ra/fsp/src/rm_hs300x/rm_hs300x.o
+                                                  ./ra_gen/hal_data.o
+g_comms_i2c_device0_ctrl                          ./ra_gen/hal_data.o
+g_comms_i2c_device0                               ./ra_gen/hal_data.o
+g_comms_on_comms_i2c                              ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+                                                  ./ra_gen/hal_data.o
+g_console_write_baud_setting                      ./ra_gen/hal_data.o
+g_console_write_cfg_extend                        ./ra_gen/hal_data.o
+main                                              ./ra_gen/main.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+g_bsp_pin_cfg_data                                ./ra_gen/pin_data.o
+g_vector_table                                    ./ra_gen/vector_data.o
+sci_uart_rxi_isr                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./ra_gen/vector_data.o
+sci_uart_txi_isr                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./ra_gen/vector_data.o
+sci_uart_tei_isr                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./ra_gen/vector_data.o
+sci_uart_eri_isr                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./ra_gen/vector_data.o
+iic_master_rxi_isr                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+                                                  ./ra_gen/vector_data.o
+iic_master_txi_isr                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+                                                  ./ra_gen/vector_data.o
+iic_master_tei_isr                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+                                                  ./ra_gen/vector_data.o
+iic_master_eri_isr                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+                                                  ./ra_gen/vector_data.o
+g_interrupt_event_link_select                     ./ra_gen/vector_data.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_irq.o
+RM_COMMS_I2C_Open                                 ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+RM_COMMS_I2C_Close                                ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+RM_COMMS_I2C_Read                                 ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+rm_comms_i2c_bus_read                             ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o
+                                                  ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+RM_COMMS_I2C_Write                                ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+rm_comms_i2c_bus_write                            ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o
+                                                  ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+RM_COMMS_I2C_WriteRead                            ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+rm_comms_i2c_bus_write_read                       ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c_driver_ra.o
+                                                  ./ra/fsp/src/rm_comms_i2c/rm_comms_i2c.o
+gp_renesas_isr_context                            ./ra/fsp/src/bsp/mcu/all/bsp_irq.o
+                                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./ra/fsp/src/r_iic_master/r_iic_master.o
+SystemCoreClock                                   ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+                                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_delay.o
+__aeabi_memcpy                                    D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o)
+                                                  ./ra/fsp/src/r_sci_uart/r_sci_uart.o
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+R_BSP_RegisterProtectEnable                       ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o
+                                                  ./ra/fsp/src/r_ioport/r_ioport.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_irq.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+R_BSP_RegisterProtectDisable                      ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o
+                                                  ./ra/fsp/src/r_ioport/r_ioport.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_irq.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+R_IIC_MASTER_Open                                 ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_Read                                 ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_Write                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_Abort                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_SlaveAddressSet                      ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_CallbackSet                          ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_StatusGet                            ./ra/fsp/src/r_iic_master/r_iic_master.o
+R_IIC_MASTER_Close                                ./ra/fsp/src/r_iic_master/r_iic_master.o
+SystemCoreClockUpdate                             ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+bsp_clock_init                                    ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+R_BSP_Init_RTC                                    ./ra/fsp/src/bsp/mcu/all/bsp_clocks.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+bsp_init                                          ./ra/board/ra6m5_ck/board_init.o
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_common.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+bsp_prv_software_delay_loop                       ./ra/fsp/src/bsp/mcu/all/bsp_delay.o
+g_bsp_group_irq_sources                           ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o
+NMI_Handler                                       ./ra/fsp/src/bsp/mcu/all/bsp_group_irq.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+bsp_irq_cfg                                       ./ra/fsp/src/bsp/mcu/all/bsp_irq.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+g_protect_counters                                ./ra/fsp/src/bsp/mcu/all/bsp_register_protection.o
+__HeapBase                                        <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o
+__HeapLimit                                       <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_sbrk.o
+__tz_FLASH_N                                      <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_security.o
+__tz_FLASH_C                                      <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_security.o
+__tz_DATA_FLASH_N                                 <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_security.o
+__tz_RAM_N                                        <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_security.o
+__tz_RAM_C                                        <internal>
+                                                  ./ra/fsp/src/bsp/mcu/all/bsp_security.o
+Reset_Handler                                     ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+SystemInit                                        ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+Default_Handler                                   ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+__Vectors                                         ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+HardFault_Handler                                 ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+MemManage_Handler                                 ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+BusFault_Handler                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+UsageFault_Handler                                ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+SecureFault_Handler                               ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+SVC_Handler                                       ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+DebugMon_Handler                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+PendSV_Handler                                    ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+SysTick_Handler                                   ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/startup.o
+__bss_end__                                       <internal>
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__bss_start__                                     <internal>
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__data_start__                                    <internal>
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__data_end__                                      <internal>
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__etext                                           <internal>
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__aeabi_memcpy4                                   D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o)
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__tls_base                                        <internal>
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+_init_tls                                         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+_set_tls                                          D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o)
+                                                  ./ra/fsp/src/bsp/cmsis/Device/RENESAS/Source/system.o
+__aeabi_memclr                                    D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+__tdata_source                                    <internal>
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+__tdata_size                                      <internal>
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+__tbss_offset                                     <internal>
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+__tbss_size                                       <internal>
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_inittls.c.o)
+__arm32_tls_tcb_offset                            <internal>
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o)
+__tls                                             D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_tls.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_picolib_machine_arm_read_tp.S.o)
+vfprintf                                          D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o)
+__file_str_put                                    D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_filestrput.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_sprintf.c.o)
+__dtoa_engine                                     D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o)
+strnlen                                           D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_string_strnlen.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o)
+__d_vfprintf                                      D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_vfprintf.c.o)
+__log10Pow2                                       D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+__pow5bits                                        D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_pow5bits.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o)
+__double_computeInvPow5                           D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+__pow5Factor                                      D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+__log10Pow5                                       D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_log10.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+__double_computePow5                              D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+__umul128                                         D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o)
+__shiftright128                                   D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_umul128.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_dtoa_ryu.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(libc_tinystdio_ryu_table.c.o)
+bzero                                             D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o)
+memset                                            D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memset.c.o)
+                                                  D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o)
+__aeabi_memclr8                                   D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(bzero.c.o)
+memcpy                                            D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o)
+__aeabi_memcpy8                                   D:\e2\toolchains\llvm_arm\LLVMEmbeddedToolchainForArm-17.0.1-Windows-x86_64\bin\..\lib\clang-runtimes/arm-none-eabi/armv8m.main_hard_fp\lib\libc.a(memcpy.c.o)
